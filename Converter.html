@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>File Format Conversion</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f1f1f1;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    button {
+      display: block;
+      margin: 10px auto;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 4px;
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/gltf-pipeline"></script>
+  <script>
+    function convertGltfToJson() {
+      // Replace 'path/to/model.gltf' with the path to your GLTF file
+      var gltfUrl = 'path/to/model.gltf';
+
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', gltfUrl, true);
+      xhr.responseType = 'blob';
+
+      xhr.onload = function (e) {
+        if (this.status === 200) {
+          var blob = this.response;
+          gltfPipeline.gltfToGltfJson(blob).then(function (gltfJson) {
+            var jsonString = JSON.stringify(gltfJson, null, 2);
+            console.log(jsonString);
+          });
+        }
+      };
+
+      xhr.send();
+    }
+
+    function convertJsonToGltf() {
+      // Replace 'path/to/model.json' with the path to your JSON file
+      var jsonUrl = 'path/to/model.json';
+
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', jsonUrl, true);
+
+      xhr.onload = function (e) {
+        if (this.status === 200) {
+          var jsonString = this.responseText;
+          var gltfJson = JSON.parse(jsonString);
+          gltfPipeline.gltfJsonToGltf(gltfJson).then(function (glbBlob) {
+            console.log(glbBlob);
+          });
+        }
+      };
+
+      xhr.send();
+    }
+  </script>
+</head>
+<body>
+  <div>
+    <h1>File Format Conversion</h1>
+
+    <button onclick="convertGltfToJson()">Convert GLTF to JSON</button>
+    <button onclick="convertJsonToGltf()">Convert JSON to GLTF</button>
+    <!-- Add more buttons for other format conversions -->
+  </div>
+</body>
+</html>
